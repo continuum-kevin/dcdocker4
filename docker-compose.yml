@@ -1,21 +1,15 @@
 version: "3"
 services:
   nginx:
-    image: nginx-simple:latest
     container_name: nginx-simpledc4
     restart: always
     ports:
       - "8090:8090"
     volumes:
       - ./wwwroot/:/var/www/
-    build:
-      context: .
+    build: ./contenta
   php:
     build: ./php
-    volumes: 
-      - ./wwwroot/:/var/www/
-  drush:
-    image: drush/drush
     volumes:
       - ./wwwroot/:/var/www/
   mysqldb:
@@ -24,7 +18,7 @@ services:
     hostname: mysqldb
     ports:
       - "3306:3306"
-    environment: 
+    environment:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
         - "./data/db/mysql:/var/lib/mysql"
@@ -35,3 +29,11 @@ services:
       - ./php.ini:/usr/local/etc/php/conf.d/zz-php.ini
     ports:
       - 8081:8080
+  appserver:
+    container_name: appserverdc4
+    restart: always
+    ports:
+      - "8091:8091"
+    volumes:
+      - ./ngroot/:/var/www/
+    build: ./appserver

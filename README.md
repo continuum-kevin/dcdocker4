@@ -9,15 +9,17 @@ Has 4 services:
 - php
 - mysqldb
 - adminer
+- appserver
 
 "adminer" is a simple phpmyadmin-like db admin interface, in this case available at port 8081.
-nginx is available at port 8090.
+nginx is available at port 8090. "appserver" is a second nginx container running on port 8091. The "ngroot" dir is bind-mounted in this container, and is meant as a location to deploy a web front end to consume the api endpoints exposed by Contenta.
 
 ## Volumes
-Two volumes are created and bind-mounted to points in this dir:
+Three volumes are created and bind-mounted to points in this dir:
 
 - data (mounts the mysql data directory here, and persists the data)
 - wwwroot (nginx docroot, persistent)
+- ngroot (mounted to the appserver container, persistent)
 
 # Building the container
 
@@ -33,6 +35,10 @@ cd into that directory, and then build using composer to the 'wwwroot' directory
 
 `composer create-project contentacms/contenta-jsonapi-project [path_to_your_dcdocker4_dir]/dcdocker4/wwwroot --stability dev --no-interaction`
 
+# Building into ngroot
+
+Create an angular app in another directory and use "ng build" to deploy to ngroot/web.
+
 ## Normal usage
 
   `docker-compose up -d`
@@ -43,4 +49,3 @@ cd into that directory, and then build using composer to the 'wwwroot' directory
 Drush gets installed in the "php" service, and can be invoked like this:
 
 `docker-compose run php drush status`
-
