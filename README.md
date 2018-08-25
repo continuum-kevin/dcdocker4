@@ -23,9 +23,15 @@ Three volumes are created and bind-mounted to points in this dir:
 
 # Building the container
 
-Clone this repository, and use the docker-compose.yml file provided here: `docker-compose build`
+Clone this repository, and use the docker-compose.yml file provided here: `docker-compose build`. Then bring up the containers with `docker-compose up`
+
+# Create a database for Contenta
+
+Use the adminer interface at localhost::8081 and create a new empty database called "contenta".
 
 # Building Contenta
+
+Remove the "web" directory inside of wwwroot (the contenta install will replace this folder, but won't install if the "web" dir already exists.)
 
 Clone contenta_jsonapi into a separate directory outside of the docker build directory you're working in:
 
@@ -34,6 +40,13 @@ Clone contenta_jsonapi into a separate directory outside of the docker build dir
 cd into that directory, and then build using composer to the 'wwwroot' directory inside of your 'dcdocker4' directory:
 
 `composer create-project contentacms/contenta-jsonapi-project [path_to_your_dcdocker4_dir]/dcdocker4/wwwroot --stability dev --no-interaction`
+
+If you get an out of memory error, increase php's memory limit: https://getcomposer.org/doc/articles/troubleshooting.md#memory-limit-errors
+
+Once composer finishes, visit localhost:8090, and you should get the Drupal install screen. For the database options, choose the "contenta" database you created earlier, and open the "advanced" options and change "host" from "localhost" to "mysqldb", as this is the hostname where the database will be available in the docker-created network.
+
+install errors: 
+The specified file core/modules/media/images/icons/audio.png could not be moved/copied because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.
 
 # Building into ngroot
 
@@ -44,7 +57,7 @@ Create an angular app in another directory and use "ng build" to deploy to ngroo
   `docker-compose up -d`
   `docker-compose down`
 
-##Drush
+## Drush
 
 Drush gets installed in the "php" service, and can be invoked like this:
 
